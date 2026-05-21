@@ -11,7 +11,6 @@
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0d14; }
 
 .bi { background: #0f1117; color: #e8eaf0; min-height: 100vh; display: grid; grid-template-columns: 220px 1fr; grid-template-rows: 52px 1fr; }
-
 .bi-topbar { grid-column: 1 / -1; background: #161b27; border-bottom: 1px solid #252d3d; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; }
 .bi-brand { display: flex; align-items: center; gap: 10px; }
 .bi-brand-dot { width: 30px; height: 30px; border-radius: 6px; background: #E02020; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: white; }
@@ -94,7 +93,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .bi-pill { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 600; }
 .bi-pill.danger { background: rgba(224,32,32,0.15); color: #ff6b6b; }
 
-.bi-ask { background: #1a2540; border: 1px solid #252d3d; border-radius: 12px; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: all 0.15s; text-decoration: none; }
+/* Ask Victor Button */
+.bi-ask { background: #1a2540; border: 1px solid #252d3d; border-radius: 12px; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: all 0.15s; }
 .bi-ask:hover { border-color: #E02020; background: #1f2d4a; }
 .bi-ask-left { display: flex; align-items: center; gap: 12px; }
 .bi-ask-icon { width: 32px; height: 32px; border-radius: 50%; background: #E02020; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: white; flex-shrink: 0; }
@@ -102,8 +102,45 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .bi-ask-text span { font-size: 11px; color: #6b7280; display: block; font-weight: 400; margin-top: 2px; }
 .bi-ask-arrow { color: #E02020; font-size: 20px; }
 
+/* Victor Chat Modal */
+.victor-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+.victor-overlay.open { display: flex; }
+.victor-modal { background: #161b27; border: 1px solid #252d3d; border-radius: 16px; width: 100%; max-width: 480px; height: 580px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 24px 80px rgba(0,0,0,0.6); }
+.victor-header { background: #1A1A2E; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+.victor-header-left { display: flex; align-items: center; gap: 10px; }
+.victor-avatar { width: 36px; height: 36px; border-radius: 50%; background: #E02020; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: white; }
+.victor-title { color: white; font-size: 14px; font-weight: 600; }
+.victor-sub { color: rgba(255,255,255,0.5); font-size: 11px; }
+.victor-close { background: none; border: none; color: #6b7280; cursor: pointer; font-size: 20px; padding: 4px; border-radius: 6px; transition: color 0.15s; }
+.victor-close:hover { color: #e8eaf0; }
+.victor-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; background: #0f1117; }
+.victor-msg { display: flex; gap: 8px; max-width: 85%; }
+.victor-msg.user { align-self: flex-end; flex-direction: row-reverse; }
+.victor-msg.assistant { align-self: flex-start; }
+.victor-msg-avatar { width: 26px; height: 26px; border-radius: 50%; background: #E02020; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: white; flex-shrink: 0; margin-top: 2px; }
+.victor-msg-avatar.u { background: #1a2540; font-size: 9px; }
+.victor-bubble { padding: 9px 13px; border-radius: 14px; font-size: 13px; line-height: 1.5; }
+.victor-msg.assistant .victor-bubble { background: #161b27; border: 1px solid #252d3d; color: #c9d1e0; border-bottom-left-radius: 3px; }
+.victor-msg.user .victor-bubble { background: #E02020; color: white; border-bottom-right-radius: 3px; }
+.victor-typing { display: flex; gap: 4px; padding: 10px 13px; background: #161b27; border: 1px solid #252d3d; border-radius: 14px; border-bottom-left-radius: 3px; width: fit-content; align-items: center; }
+.victor-typing span { width: 5px; height: 5px; background: #E02020; border-radius: 50%; animation: vbounce 1.2s infinite; display: block; }
+.victor-typing span:nth-child(2) { animation-delay: 0.2s; }
+.victor-typing span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes vbounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-5px)} }
+.victor-quick { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 16px 0; background: #0f1117; flex-shrink: 0; }
+.victor-quick-btn { background: #161b27; border: 1px solid #252d3d; border-radius: 16px; padding: 4px 11px; font-size: 11px; color: #7c8db0; cursor: pointer; transition: all 0.15s; font-family: inherit; }
+.victor-quick-btn:hover { border-color: #E02020; color: #E02020; }
+.victor-input-row { padding: 12px 14px; display: flex; gap: 8px; background: #161b27; border-top: 1px solid #252d3d; flex-shrink: 0; align-items: flex-end; }
+.victor-input-row textarea { flex: 1; background: #0f1117; border: 1px solid #252d3d; border-radius: 8px; padding: 8px 11px; font-size: 13px; font-family: inherit; color: #e8eaf0; resize: none; outline: none; line-height: 1.4; min-height: 36px; max-height: 90px; transition: border-color 0.15s; }
+.victor-input-row textarea:focus { border-color: #E02020; }
+.victor-send { width: 36px; height: 36px; border-radius: 50%; background: #E02020; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: opacity 0.15s; }
+.victor-send:hover { opacity: 0.85; }
+.victor-send:disabled { opacity: 0.35; cursor: not-allowed; }
+.victor-send svg { width: 15px; height: 15px; fill: white; }
+.victor-powered { text-align: center; font-size: 10px; color: #4b5563; padding: 6px; background: #161b27; border-top: 1px solid #1a2130; flex-shrink: 0; }
+
 @media (max-width: 900px) {
-  .bi { grid-template-columns: 1fr; grid-template-rows: 52px auto 1fr; }
+  .bi { grid-template-columns: 1fr; }
   .bi-sidebar { display: none; }
   .bi-kpi-row { grid-template-columns: repeat(2, 1fr); }
   .bi-charts-row, .bi-bottom-row { grid-template-columns: 1fr; }
@@ -111,6 +148,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 </style>
 </head>
 <body>
+
 <div class="bi">
   <div class="bi-topbar">
     <div class="bi-brand">
@@ -146,7 +184,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
   </div>
 
   <div class="bi-main">
-
     <div class="bi-goal-card">
       <div class="bi-goal-top">
         <div class="bi-goal-left">
@@ -158,16 +195,14 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
           <div class="bi-goal-gap" id="bi-gap">$11,040 remaining to goal</div>
         </div>
       </div>
-      <div class="bi-progress-track">
-        <div class="bi-progress-fill" id="bi-bar" style="width:78%"></div>
-      </div>
+      <div class="bi-progress-track"><div class="bi-progress-fill" id="bi-bar" style="width:78%"></div></div>
       <div class="bi-goal-inputs">
         <div class="bi-input-group">
-          <label for="g-goal"><i class="ti ti-target" style="font-size:12px"></i> Monthly goal ($)</label>
+          <label for="g-goal">Monthly goal ($)</label>
           <input type="number" id="g-goal" value="50000" step="1000" oninput="updateGoal()">
         </div>
         <div class="bi-input-group">
-          <label for="g-rev"><i class="ti ti-cash" style="font-size:12px"></i> Revenue so far ($)</label>
+          <label for="g-rev">Revenue so far ($)</label>
           <input type="number" id="g-rev" value="38960" step="100" oninput="updateGoal()">
         </div>
       </div>
@@ -209,9 +244,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
             <div class="bi-legend-item"><div class="bi-legend-dot" style="background:#E02020"></div>On hold</div>
           </div>
         </div>
-        <div style="position:relative;height:200px;">
-          <canvas id="programChart" role="img" aria-label="Bar chart showing active vs on hold members across 7 Victory Martial Arts programs">Active members: Victory 112, Leadership 74, Legacy 65, Tigers Victory 74, Tigers Leadership 39, Warrior 39, Jiu Jitsu 11. On hold: Victory 50, Leadership 60, Legacy 42, Tigers Victory 24, Tigers Leadership 14, Warrior 24, Jiu Jitsu 2.</canvas>
-        </div>
+        <div style="position:relative;height:200px;"><canvas id="programChart"></canvas></div>
       </div>
       <div class="bi-chart-card">
         <div class="bi-chart-header">
@@ -221,9 +254,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
             <div class="bi-legend-item"><div class="bi-legend-dot" style="background:#f59e0b"></div>Revenue</div>
           </div>
         </div>
-        <div style="position:relative;height:200px;">
-          <canvas id="trialChart" role="img" aria-label="Bar chart comparing trial registrations and net sales across different trial types">Trial registrations and net sales across 7 trial types at Hunters Creek Victory Martial Arts.</canvas>
-        </div>
+        <div style="position:relative;height:200px;"><canvas id="trialChart"></canvas></div>
       </div>
     </div>
 
@@ -231,50 +262,17 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
       <div class="bi-alert-card">
         <div class="bi-alert-title">Urgent alerts</div>
         <div class="bi-alerts">
-          <div class="bi-alert crit">
-            <i class="ti ti-alert-triangle" style="color:#E02020"></i>
-            <div class="bi-alert-body">471 trial leads — 0% converted to membership
-              <span>Biggest revenue leak. Automated follow-up needed immediately.</span>
-            </div>
-          </div>
-          <div class="bi-alert warn">
-            <i class="ti ti-user-minus" style="color:#f59e0b"></i>
-            <div class="bi-alert-body">Leadership: 60 on hold out of 134 (45% hold rate)
-              <span>Highest churn risk — retention sequence should trigger now</span>
-            </div>
-          </div>
-          <div class="bi-alert warn">
-            <i class="ti ti-user-minus" style="color:#f59e0b"></i>
-            <div class="bi-alert-body">Legacy: 42 on hold out of 107 (39% hold rate)
-              <span>Second highest churn risk at Hunters Creek</span>
-            </div>
-          </div>
-          <div class="bi-alert warn">
-            <i class="ti ti-user-minus" style="color:#f59e0b"></i>
-            <div class="bi-alert-body">Victory Program: 50 on hold out of 162 (31%)
-              <span>Most popular program — nearly 1 in 3 members at risk</span>
-            </div>
-          </div>
-          <div class="bi-alert info">
-            <i class="ti ti-calendar-stats" style="color:#3b82f6"></i>
-            <div class="bi-alert-body">Ninja Party May 22 — 0 registrations
-              <span>Promote via SMS and email to HC families today</span>
-            </div>
-          </div>
+          <div class="bi-alert crit"><i class="ti ti-alert-triangle" style="color:#E02020"></i><div class="bi-alert-body">471 trial leads — 0% converted to membership<span>Biggest revenue leak. Automated follow-up needed immediately.</span></div></div>
+          <div class="bi-alert warn"><i class="ti ti-user-minus" style="color:#f59e0b"></i><div class="bi-alert-body">Leadership: 60 on hold out of 134 (45% hold rate)<span>Highest churn risk — retention sequence should trigger now</span></div></div>
+          <div class="bi-alert warn"><i class="ti ti-user-minus" style="color:#f59e0b"></i><div class="bi-alert-body">Legacy: 42 on hold out of 107 (39% hold rate)<span>Second highest churn risk at Hunters Creek</span></div></div>
+          <div class="bi-alert warn"><i class="ti ti-user-minus" style="color:#f59e0b"></i><div class="bi-alert-body">Victory Program: 50 on hold out of 162 (31%)<span>Most popular program — nearly 1 in 3 members at risk</span></div></div>
+          <div class="bi-alert info"><i class="ti ti-calendar-stats" style="color:#3b82f6"></i><div class="bi-alert-body">Ninja Party May 22 — 0 registrations<span>Promote via SMS and email to HC families today</span></div></div>
         </div>
       </div>
-
       <div class="bi-table-card">
         <div class="bi-table-title">Trial pipeline — Hunters Creek</div>
-        <table class="bi-table" aria-label="Trial pipeline showing registrations, revenue and conversion status">
-          <thead>
-            <tr>
-              <th style="width:40%">Trial</th>
-              <th style="width:16%">Leads</th>
-              <th style="width:24%">Net sales</th>
-              <th style="width:20%">CVR</th>
-            </tr>
-          </thead>
+        <table class="bi-table">
+          <thead><tr><th style="width:40%">Trial</th><th style="width:16%">Leads</th><th style="width:24%">Net sales</th><th style="width:20%">CVR</th></tr></thead>
           <tbody>
             <tr><td>$49 Limited offer</td><td>384</td><td>$10,008</td><td><span class="bi-pill danger">0%</span></td></tr>
             <tr><td>4 Week $99 trial</td><td>30</td><td>$1,445</td><td><span class="bi-pill danger">0%</span></td></tr>
@@ -288,7 +286,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
       </div>
     </div>
 
-    <div class="bi-ask" onclick="alert('In the full version, Victor answers this question using your live MyStudio data. Powered by AI Data Flow.')">
+    <div class="bi-ask" onclick="openVictor()">
       <div class="bi-ask-left">
         <div class="bi-ask-icon">V</div>
         <div class="bi-ask-text">
@@ -298,13 +296,45 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
       </div>
       <i class="ti ti-arrow-right bi-ask-arrow"></i>
     </div>
+  </div>
+</div>
 
+<!-- Victor Chat Modal -->
+<div class="victor-overlay" id="victorOverlay" onclick="closeOnOverlay(event)">
+  <div class="victor-modal">
+    <div class="victor-header">
+      <div class="victor-header-left">
+        <div class="victor-avatar">V</div>
+        <div>
+          <div class="victor-title">Victor</div>
+          <div class="victor-sub">Victory Martial Arts AI — Hunters Creek</div>
+        </div>
+      </div>
+      <button class="victor-close" onclick="closeVictor()" aria-label="Close Victor chat">&times;</button>
+    </div>
+    <div class="victor-messages" id="victorMessages"></div>
+    <div class="victor-quick" id="victorQuick">
+      <button class="victor-quick-btn" onclick="vq('What should I focus on today to hit my $50K goal?')">Focus for today</button>
+      <button class="victor-quick-btn" onclick="vq('Which program has the most churn risk?')">Churn risk</button>
+      <button class="victor-quick-btn" onclick="vq('What do I do with 471 trial leads that never converted?')">Trial leads</button>
+      <button class="victor-quick-btn" onclick="vq('What events should I promote this week?')">Upcoming events</button>
+    </div>
+    <div class="victor-input-row">
+      <textarea id="victorInput" placeholder="Ask Victor anything about Hunters Creek..." rows="1"
+        onkeydown="victorKey(event)" oninput="victorResize(this)"></textarea>
+      <button class="victor-send" id="victorSend" onclick="victorSend()" aria-label="Send message">
+        <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
+      </button>
+    </div>
+    <div class="victor-powered">Powered by AI Data Flow · aidataflow.io</div>
   </div>
 </div>
 
 <script>
+// ── Date ─────────────────────────────────────────────────────
 document.getElementById('bi-date').textContent = new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
 
+// ── Goal bar ─────────────────────────────────────────────────
 function updateGoal() {
   const goal = parseFloat(document.getElementById('g-goal').value) || 50000;
   const rev  = parseFloat(document.getElementById('g-rev').value)  || 0;
@@ -318,23 +348,17 @@ function updateGoal() {
   document.getElementById('bi-gap').textContent   = gap > 0 ? '$' + gap.toLocaleString() + ' remaining to goal' : 'Goal reached!';
 }
 
+// ── Charts ────────────────────────────────────────────────────
 new Chart(document.getElementById('programChart'), {
   type: 'bar',
   data: {
     labels: ['Victory','Leadership','Legacy','Tigers V','Tigers L','Warrior','Jiu Jitsu'],
     datasets: [
-      { label: 'Active', data: [112,74,65,74,39,39,11], backgroundColor: '#10b981', borderRadius: 4 },
-      { label: 'On hold', data: [50,60,42,24,14,24,2],  backgroundColor: '#E02020', borderRadius: 4 },
+      { label: 'Active',   data: [112,74,65,74,39,39,11], backgroundColor: '#10b981', borderRadius: 4 },
+      { label: 'On hold',  data: [50,60,42,24,14,24,2],   backgroundColor: '#E02020', borderRadius: 4 },
     ]
   },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: {
-      x: { ticks: { color: '#6b7280', font: { size: 9 } }, grid: { color: '#1e2535' } },
-      y: { ticks: { color: '#6b7280', font: { size: 9 } }, grid: { color: '#1e2535' } }
-    }
-  }
+  options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ x:{ticks:{color:'#6b7280',font:{size:9}},grid:{color:'#1e2535'}}, y:{ticks:{color:'#6b7280',font:{size:9}},grid:{color:'#1e2535'}} } }
 });
 
 new Chart(document.getElementById('trialChart'), {
@@ -342,20 +366,150 @@ new Chart(document.getElementById('trialChart'), {
   data: {
     labels: ['$49 Offer','$99 Trial','Family','33 Days','Free Class','Free Wk','2 Week'],
     datasets: [
-      { label: 'Registrations', data: [384,30,20,19,13,7,6],        backgroundColor: '#3b82f6', borderRadius: 4, yAxisID: 'y'  },
-      { label: 'Net sales ($)', data: [10008,1445,655,627,0,0,180], backgroundColor: '#f59e0b', borderRadius: 4, yAxisID: 'y2' },
+      { label: 'Leads',      data: [384,30,20,19,13,7,6],        backgroundColor: '#3b82f6', borderRadius: 4, yAxisID:'y'  },
+      { label: 'Revenue ($)',data: [10008,1445,655,627,0,0,180],  backgroundColor: '#f59e0b', borderRadius: 4, yAxisID:'y2' },
     ]
   },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: {
-      x:  { ticks: { color: '#6b7280', font: { size: 9 } }, grid: { color: '#1e2535' } },
-      y:  { position: 'left',  ticks: { color: '#3b82f6', font: { size: 9 } }, grid: { color: '#1e2535' } },
-      y2: { position: 'right', ticks: { color: '#f59e0b', font: { size: 9 }, callback: v => '$' + v.toLocaleString() }, grid: { display: false } }
-    }
-  }
+  options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ x:{ticks:{color:'#6b7280',font:{size:9}},grid:{color:'#1e2535'}}, y:{position:'left',ticks:{color:'#3b82f6',font:{size:9}},grid:{color:'#1e2535'}}, y2:{position:'right',ticks:{color:'#f59e0b',font:{size:9},callback:v=>'$'+v.toLocaleString()},grid:{display:false}} } }
 });
+
+// ── Victor System Prompt ─────────────────────────────────────
+const VICTOR_SYSTEM = `You are Victor, the internal AI business advisor for Alicia at Victory Martial Arts, Hunters Creek location. You have full access to her real business data and give sharp, actionable advice.
+
+HUNTERS CREEK REAL DATA (May 2026):
+Monthly goal: $50,000
+Revenue so far this month: ~$38,960 (78% of goal, $11,040 remaining)
+
+PROGRAMS — ACTIVE / ON HOLD:
+- Victory Program: 112 active, 50 on hold (31% hold rate) — LTV $664, avg 17 months
+- Leadership Program: 74 active, 60 on hold (45% hold rate) — LTV $737, avg 24 months — HIGHEST RISK
+- Legacy Program: 65 active, 42 on hold (39% hold rate) — LTV $965, avg 22 months
+- Tigers Victory (kids): 74 active, 24 on hold (24% hold rate) — LTV $597, avg 17 months
+- Tigers Leadership (kids): 39 active, 14 on hold (26% hold rate) — LTV $723, avg 25 months
+- Warrior Program: 39 active, 24 on hold (38% hold rate) — LTV $268, avg 21 months
+- Jiu Jitsu: 11 active, 2 on hold (15% hold rate) — LTV $298, avg 6 months
+TOTAL: 375 active, 162 on hold
+
+TRIAL PIPELINE — ALL 0% CONVERSION:
+- $49 Limited offer: 384 registered, $10,008 net sales, 0% converted
+- 4 Week $99 trial: 30 registered, $1,445 net sales, 0% converted
+- 4 Week Family: 20 registered, $655 net sales, 0% converted
+- 33 Days trial: 19 registered, $627 net sales, 0% converted
+- Free intro class: 13 registered, $0, 0% converted
+- 1 Week FREE: 7 registered, $0, 0% converted
+- 2 Week trial: 6 registered, $180, 0% converted
+TOTAL: 471 trial leads, 0% conversion — biggest revenue leak
+
+UPCOMING EVENTS:
+- Ninja Party: May 22 (TOMORROW) — 0 registered — needs immediate promotion
+- XMA Camp 1: June 1-5 — 9 registered
+- Pre Camp: June 22-26 — 2 registered
+- XMA Camp 2: July 13-17 — 3 registered
+- July BootCamp: July — 7 registered
+- Safety Camp: Aug 3-7 — 2 registered
+- Summer Camp Special: 10 registered — $4,350 net sales
+- Victory World Convention Tournament: 20 registered — $1,950 net sales
+
+CLASS SCHEDULE:
+Adult: 12-1PM | Black Belts: 7:15-8PM | Eagle (3-6yo): multiple slots | Family Class: multiple slots | Jiu Jitsu: 8-9AM, 8-9:30PM | Krav Maga: 9-9:45AM, 8-9PM | Victory Class: 4:30-5:15PM, 6:30-7:15PM | Leadership: 5:15-5:45PM | Legacy: 6:30-7:15PM | XMA Beginner: 4-4:30PM | XMA Advance: 5:15-5:45PM | Sparring: 11:15-11:45AM, 4:30-5:15PM
+
+KEY INSIGHTS YOU KNOW:
+- 471 people tried Victory and 0 converted — the follow-up system is completely broken
+- Leadership program has 45% hold rate — nearly half the program is at risk
+- Legacy has the highest LTV ($965) but 39% on hold — high value members leaving
+- Jiu Jitsu is underperforming (only 11 active, 6 month avg retention)
+- Belt promotions is their biggest event: 1,235 total participants, $11,000 net sales
+- The $49 offer brought in 384 leads — none converted. That's potentially $14M in lost lifetime value.
+
+Be direct, specific, and actionable. Give Alicia real recommendations based on this data. Reference specific numbers when answering. Keep responses concise — 3 to 5 sentences unless a list is needed. You are her AI business advisor, not a generic chatbot.`;
+
+// ── Victor Chat Logic ─────────────────────────────────────────
+let vMessages = [];
+let vLoading  = false;
+
+function openVictor() {
+  document.getElementById('victorOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  if (vMessages.length === 0) renderVictor();
+  document.getElementById('victorInput').focus();
+}
+
+function closeVictor() {
+  document.getElementById('victorOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function closeOnOverlay(e) {
+  if (e.target === document.getElementById('victorOverlay')) closeVictor();
+}
+
+function renderVictor() {
+  const c = document.getElementById('victorMessages');
+  c.innerHTML = '';
+  if (vMessages.length === 0) {
+    c.innerHTML = '<div class="victor-msg assistant"><div class="victor-msg-avatar">V</div><div class="victor-bubble">Hi Alicia! I\'m Victor, your AI business advisor for Hunters Creek. I have your real data in front of me — 375 active members, 162 on hold, 471 trial leads with 0% conversion, and you\'re at 78% of your $50K goal. What do you want to tackle first?</div></div>';
+    return;
+  }
+  vMessages.forEach(m => {
+    const d = document.createElement('div');
+    d.className = 'victor-msg ' + m.role;
+    if (m.role === 'assistant') {
+      d.innerHTML = '<div class="victor-msg-avatar">V</div><div class="victor-bubble">' + m.content.replace(/\n/g,'<br>') + '</div>';
+    } else {
+      d.innerHTML = '<div class="victor-bubble">' + m.content + '</div><div class="victor-msg-avatar u">Ali</div>';
+    }
+    c.appendChild(d);
+  });
+  if (vLoading) {
+    const t = document.createElement('div');
+    t.className = 'victor-msg assistant';
+    t.innerHTML = '<div class="victor-msg-avatar">V</div><div class="victor-typing"><span></span><span></span><span></span></div>';
+    c.appendChild(t);
+  }
+  c.scrollTop = c.scrollHeight;
+}
+
+async function victorSend() {
+  const inp  = document.getElementById('victorInput');
+  const text = inp.value.trim();
+  if (!text || vLoading) return;
+  inp.value = '';
+  victorResize(inp);
+  document.getElementById('victorQuick').style.display = 'none';
+  vMessages.push({ role: 'user', content: text });
+  vLoading = true;
+  document.getElementById('victorSend').disabled = true;
+  renderVictor();
+  try {
+    const res  = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, system: VICTOR_SYSTEM, messages: vMessages })
+    });
+    const data = await res.json();
+    const reply = data.content?.[0]?.text || 'Sorry, I had trouble with that. Try again!';
+    vMessages.push({ role: 'assistant', content: reply });
+  } catch(e) {
+    vMessages.push({ role: 'assistant', content: 'Connection issue. Please try again!' });
+  }
+  vLoading = false;
+  document.getElementById('victorSend').disabled = false;
+  renderVictor();
+}
+
+function vq(text) {
+  document.getElementById('victorInput').value = text;
+  victorSend();
+}
+
+function victorKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); victorSend(); }
+}
+
+function victorResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 90) + 'px';
+}
 </script>
 </body>
 </html>
